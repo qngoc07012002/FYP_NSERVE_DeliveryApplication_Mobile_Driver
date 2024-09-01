@@ -1,7 +1,8 @@
-import 'package:deliveryapplication_mobile_customer/screens/changepassword_screen.dart';
-import 'package:deliveryapplication_mobile_customer/screens/payment_screen.dart';
+
+import 'package:deliveryapplication_mobile_driver/screens/payment_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'changepassword_screen.dart';
 import 'editprofile_screen.dart';
 import 'order_screen.dart';
 
