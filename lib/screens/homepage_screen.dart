@@ -46,7 +46,6 @@ class _DriverHomePageState extends State<DriverHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -55,7 +54,11 @@ class _DriverHomePageState extends State<DriverHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            label: 'History',
+            label: 'Order',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: 'Message',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -141,33 +144,94 @@ class _DriverHomePageState extends State<DriverHomePage> {
                 ],
               ),
             ),
-            const SizedBox(height: 24.0),
+
+            // Revenue and Orders section
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Today\'s Revenue',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black.withOpacity(0.8),
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Text(
+                              '\$150',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Today\'s Orders',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black.withOpacity(0.8),
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Text(
+                              '20 Orders',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
 
             // Revenue section with charts
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Revenue Overview',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 24.0),
-
                   // Daily Revenue Chart
                   Card(
                     elevation: 4,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Daily Revenue', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 16.0),
                           SizedBox(
                             height: 200,
                             child: SfCartesianChart(
@@ -183,9 +247,9 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                 ),
                               ],
                               title: ChartTitle(
-                                text: 'Total Revenue: \$400',
+                                text: 'Daily Revenue: \$400',
                                 alignment: ChartAlignment.center,
-                                textStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
+                                textStyle: TextStyle(color: Colors.black.withOpacity(0.8)),
                               ),
                               margin: EdgeInsets.symmetric(vertical: 16),
                             ),
@@ -194,18 +258,16 @@ class _DriverHomePageState extends State<DriverHomePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 5),
 
                   // Monthly Revenue Chart
                   Card(
                     elevation: 4,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Monthly Revenue', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 16.0),
                           SizedBox(
                             height: 300,
                             child: SfCartesianChart(
@@ -221,9 +283,9 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                 ),
                               ],
                               title: ChartTitle(
-                                text: 'Total Revenue: \$2500',
+                                text: 'Monthly Revenue: \$2500',
                                 alignment: ChartAlignment.center,
-                                textStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
+                                textStyle: TextStyle(color: Colors.black.withOpacity(0.8)),
                               ),
                               margin: EdgeInsets.symmetric(vertical: 16),
                             ),
@@ -232,20 +294,18 @@ class _DriverHomePageState extends State<DriverHomePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 5),
 
                   // Yearly Revenue Chart
                   Card(
                     elevation: 4,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Yearly Revenue', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 16.0),
                           SizedBox(
-                            height: 200,
+                            height: 300,
                             child: SfCartesianChart(
                               primaryXAxis: CategoryAxis(),
                               primaryYAxis: NumericAxis(),
@@ -254,14 +314,14 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                   dataSource: yearlyData,
                                   xValueMapper: (ChartData data, _) => data.x,
                                   yValueMapper: (ChartData data, _) => data.y,
-                                  color: Colors.orange,
+                                  color: Colors.red,
                                   dataLabelSettings: DataLabelSettings(isVisible: true),
                                 ),
                               ],
                               title: ChartTitle(
-                                text: 'Total Revenue: \$12000',
+                                text: 'Yearly Revenue: \$18000',
                                 alignment: ChartAlignment.center,
-                                textStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
+                                textStyle: TextStyle(color: Colors.black.withOpacity(0.8)),
                               ),
                               margin: EdgeInsets.symmetric(vertical: 16),
                             ),
@@ -282,10 +342,11 @@ class _DriverHomePageState extends State<DriverHomePage> {
 
 class ChartData {
   ChartData(this.x, this.y);
-
   final String x;
   final double y;
 }
+
+
 
 void main() {
   runApp(const MaterialApp(
