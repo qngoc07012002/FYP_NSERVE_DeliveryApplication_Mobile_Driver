@@ -1,9 +1,12 @@
+import 'dart:async';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:deliveryapplication_mobile_driver/screens/message_screen.dart';
 import 'package:deliveryapplication_mobile_driver/screens/order_screen.dart';
 import 'package:deliveryapplication_mobile_driver/screens/profile_screen.dart';
-import 'package:deliveryapplication_mobile_driver/screens/services/getlocation.dart';
+import 'package:deliveryapplication_mobile_driver/services/getlocation.dart';
 
 class DriverHomePage extends StatefulWidget {
   const DriverHomePage({super.key});
@@ -15,16 +18,37 @@ class DriverHomePage extends StatefulWidget {
 class _DriverHomePageState extends State<DriverHomePage> {
   int _selectedIndex = 0;
   bool isOnline = false;
-  bool _isLoading = true; // Thêm biến trạng thái loading
+  bool _isLoading = true;
   MapboxMap? mapboxMap;
   LocationService _locationService = LocationService();
-  late double _latitude;
-  late double _longitude;
+  double? _latitude;
+  double? _longitude;
+  PointAnnotationManager? pointAnnotationManager;
+  Timer? _locationUpdateTimer;
 
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
+    _initializeLocation();
+  }
+
+  @override
+  void dispose() {
+    _locationUpdateTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _initializeLocation() async {
+    await _getCurrentLocation(); // Lấy vị trí đầu tiên khi mở ứng dụng
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  _onMapCreated(MapboxMap mapboxMap) async {
+    this.mapboxMap = mapboxMap;
+    pointAnnotationManager = await mapboxMap.annotations.createPointAnnotationManager();
+    _moveCameraToCurrentLocation();
   }
 
   Future<void> _getCurrentLocation() async {
@@ -32,27 +56,61 @@ class _DriverHomePageState extends State<DriverHomePage> {
       Map<String, double>? location = await _locationService.getCurrentLocation();
       if (location != null) {
         setState(() {
-          _latitude = location['latitude']!;
-          _longitude = location['longitude']!;
-          _isLoading = false;
+          _latitude = location['latitude'];
+          _longitude = location['longitude'];
         });
+        if (isOnline) {
+          _updateLocationOnMap();
+        }
       }
     } catch (e) {
       print(e);
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
-  _onMapCreated(MapboxMap mapboxMap) {
-    this.mapboxMap = mapboxMap;
+  Future<void> _moveCameraToCurrentLocation() async {
+    if (mapboxMap != null && _latitude != null && _longitude != null) {
+      CameraOptions camera = CameraOptions(
+        center: Point(coordinates: Position(_longitude ?? 0.0, _latitude ?? 0.0)),
+        zoom: 15,
+        bearing: 0,
+        pitch: 30,
+      );
+      mapboxMap?.setCamera(camera);
+    }
   }
 
-  void _onItemTapped(int index) {
+  Future<void> _updateLocationOnMap() async {
+    if (mapboxMap != null && _latitude != null && _longitude != null) {
+      // Xóa tất cả điểm cũ
+      pointAnnotationManager?.deleteAll();
+
+      // Tải icon và tạo annotation
+      final ByteData bytes = await rootBundle.load('assets/icons/pin.png');
+      final Uint8List imageData = bytes.buffer.asUint8List();
+      PointAnnotationOptions pointAnnotationOptions = PointAnnotationOptions(
+        geometry: Point(coordinates: Position(_longitude!, _latitude!)),
+        image: imageData,
+        iconSize: 0.2,
+      );
+      pointAnnotationManager?.create(pointAnnotationOptions);
+    }
+  }
+
+  void _toggleOnlineStatus() {
     setState(() {
-      _selectedIndex = index;
-      print('Selected index: $_selectedIndex');
+      isOnline = !isOnline;
+      if (isOnline) {
+        // Bắt đầu cập nhật vị trí mỗi 5 giây
+        _locationUpdateTimer = Timer.periodic(Duration(seconds: 5), (timer) {
+          _getCurrentLocation();
+        });
+        _updateLocationOnMap(); // Vẽ icon vị trí lên map
+      } else {
+        // Dừng cập nhật và xóa icon vị trí trên map
+        _locationUpdateTimer?.cancel();
+        pointAnnotationManager?.deleteAll();
+      }
     });
   }
 
@@ -61,22 +119,10 @@ class _DriverHomePageState extends State<DriverHomePage> {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.reorder),
-            label: 'Order',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message),
-            label: 'Message',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.reorder), label: 'Order'),
+          BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Message'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF39c5c8),
@@ -95,37 +141,41 @@ class _DriverHomePageState extends State<DriverHomePage> {
     );
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   Widget _buildHomePage() {
+    MapboxOptions.setAccessToken("pk.eyJ1IjoicW5nb2MwNzAxMjAwMiIsImEiOiJjbTE0MDkwbWkxZ3IwMnZxMjB2ejBkaGZnIn0.cuJH5sW_W10ZWlQpIb67dw");
+
+    CameraOptions camera = CameraOptions(
+      center: Point(coordinates: Position(_longitude ?? 0.0, _latitude ?? 0.0)),
+      zoom: 15,
+      bearing: 0,
+      pitch: 30,
+    );
+
     return Stack(
       children: [
-        // Map section
         Positioned.fill(
           child: _isLoading
-              ? Center(
-            child: CircularProgressIndicator(),
-          )
+              ? Center(child: CircularProgressIndicator())
               : MapWidget(
-            key: const ValueKey("mapWidget"),
-            resourceOptions: ResourceOptions(
-                accessToken:
-                "pk.eyJ1IjoicW5nb2MwNzAxMjAwMiIsImEiOiJjbTE0MDkwbWkxZ3IwMnZxMjB2ejBkaGZnIn0.cuJH5sW_W10ZWlQpIb67dw"),
-            cameraOptions: CameraOptions(
-                center: Point(coordinates: Position(_longitude, _latitude)).toJson(),
-                zoom: 17),
-            styleUri: MapboxStyles.DARK,
-            textureView: true,
+            cameraOptions: camera,
             onMapCreated: _onMapCreated,
+            styleUri: MapboxStyles.DARK,
           ),
         ),
-        // Header with avatar, name, and status toggle button
         Positioned(
-          top: 40, // Adjust as needed
+          top: 40,
           left: 16,
           right: 16,
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.6), // Semi-transparent background for better readability
+              color: Colors.white.withOpacity(0.6),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -175,11 +225,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      isOnline = !isOnline;
-                    });
-                  },
+                  onPressed: _toggleOnlineStatus,
                   child: Text(isOnline ? 'Go Offline' : 'Go Online'),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: const Color(0xFF39c5c8),
