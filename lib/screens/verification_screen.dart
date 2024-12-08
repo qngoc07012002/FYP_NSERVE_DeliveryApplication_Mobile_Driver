@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:deliveryapplication_mobile_driver/screens/homepage_screen.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -100,12 +98,12 @@ class _VerificationPageState extends State<VerificationPage> {
           await prefs.setString('jwt_token', token);
 
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DriverHomePage(),
-            ),
-          );
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => DriverHomePage(),
+          //   ),
+          // );
         } else if (responseData['result']['status'] == 'pending') {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Try again')),

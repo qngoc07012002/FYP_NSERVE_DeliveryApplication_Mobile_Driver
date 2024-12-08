@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
 
 class ChatDetailPage extends StatelessWidget {
+
+
   final Map<String, dynamic> conversation;
 
   const ChatDetailPage({super.key, required this.conversation});
 
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(conversation['name'], style: TextStyle(

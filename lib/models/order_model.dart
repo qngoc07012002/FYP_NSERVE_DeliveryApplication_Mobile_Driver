@@ -4,17 +4,19 @@ import 'package:intl/intl.dart'; // For date formatting and parsing
 import 'location_model.dart';
 
 class Order {
-  final String orderCode;
-  final String orderType; // FOOD hoặc RIDE
-  final Restaurant? restaurantInfo;
-  final User userInfo;
-  final Location startLocation;
-  final Location endLocation;
-  final String orderStatus;
-  final double shippingFee;
-  final DateTime createdAt;
+  String? id;
+  String orderCode;
+  String orderType;
+  Restaurant? restaurantInfo;
+  User userInfo;
+  Location startLocation;
+  Location endLocation;
+  String orderStatus;
+  double shippingFee;
+  DateTime createdAt;
 
   Order({
+    this.id,
     required this.orderCode,
     required this.orderType,
     this.restaurantInfo,
@@ -32,6 +34,7 @@ class Order {
     DateTime createdAt = DateTime.parse(dateString).toLocal();
 
     return Order(
+      id: json['id'] ?? '',
       orderCode: json['orderCode'],
       orderType: json['orderType'],
       restaurantInfo: json['restaurantInfo'] != null

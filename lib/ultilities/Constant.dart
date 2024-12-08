@@ -3,134 +3,58 @@ import 'dart:ui';
 class Constant {
 
   // ignore: constant_identifier_names
-  static const KEY_BASE_URL = "https://it-fresher.edu.vn/nms";
+  static const BACKEND_URL = "http://10.0.2.2:8080/nserve";
 
   // ignore: constant_identifier_names
-  static const KEY_NOTE_READ_ALL = "$KEY_BASE_URL/get?tab=Note&email=";
+  static const GENERATE_OTP_URL = "$BACKEND_URL/auth/generateOTP";
 
   // ignore: constant_identifier_names
-  static const KEY_CREATE_NOTE = "$KEY_BASE_URL/add?tab=Note&email=";
+  static const VERIFY_OTP_URL = "$BACKEND_URL/auth/verifyOTP";
 
   // ignore: constant_identifier_names
-  static const KEY_UPDATE_NOTE = "$KEY_BASE_URL/update?tab=Note&email=";
+  static const IMAGE_URL = "$BACKEND_URL/images/";
 
   // ignore: constant_identifier_names
-  static const KEY_DELETE_NOTE = "$KEY_BASE_URL/del?tab=Note&email=";
+  static const RESTAURANT_URL = "$BACKEND_URL/restaurants";
 
   // ignore: constant_identifier_names
-  static const KEY_CATEGORY_READ_ALL = "$KEY_BASE_URL/get?tab=Category&email=";
+  static const RESTAURANT_INFO_URL = "$RESTAURANT_URL/info";
 
   // ignore: constant_identifier_names
-  static const KEY_CREATE_CATEGORY = "$KEY_BASE_URL/add?tab=Category&email=";
+  static const CATEGORY_URL = "$BACKEND_URL/categories";
 
   // ignore: constant_identifier_names
-  static const KEY_UPDATE_CATEGORY = "$KEY_BASE_URL/update?tab=Category&email=";
+  static const DRIVER_URL = "$BACKEND_URL/drivers";
 
   // ignore: constant_identifier_names
-  static const KEY_DELETE_CATEGORY = "$KEY_BASE_URL/del?tab=Category&email=";
+  static const DRIVER_INFO_URL = "$DRIVER_URL/info";
 
   // ignore: constant_identifier_names
-  static const KEY_STATUS_READ_ALL = "$KEY_BASE_URL/get?tab=Status&email=";
+  static const DRIVER_STATUS_URL = "$DRIVER_URL/status";
 
   // ignore: constant_identifier_names
-  static const KEY_CREATE_STATUS = "$KEY_BASE_URL/add?tab=Status&email=";
+  static const FOOD_URL = "$BACKEND_URL/foods";
 
   // ignore: constant_identifier_names
-  static const KEY_UPDATE_STATUS = "$KEY_BASE_URL/update?tab=Status&email=";
+  static const ORDER_URL = "$BACKEND_URL/orders";
 
   // ignore: constant_identifier_names
-  static const KEY_DELETE_STATUS = "$KEY_BASE_URL/del?tab=Status&email=";
+  static const ORDER_DRIVER_URL = "$ORDER_URL/driver";
 
   // ignore: constant_identifier_names
-  static const KEY_PRIORITY_READ_ALL = "$KEY_BASE_URL/get?tab=Priority&email=";
+  static const SHIPPING_FEE_URL = "$BACKEND_URL/orders/calculate-shipping-fee";
 
   // ignore: constant_identifier_names
-  static const KEY_CREATE_PRIORITY = "$KEY_BASE_URL/add?tab=Priority&email=";
+  static const DRIVER_LOCATION_URL = "$DRIVER_URL/location";
 
   // ignore: constant_identifier_names
-  static const KEY_UPDATE_PRIORITY = "$KEY_BASE_URL/update?tab=Priority&email=";
+  static const WEBSOCKET_URL = "$BACKEND_URL/ws";
 
   // ignore: constant_identifier_names
-  static const KEY_DELETE_PRIORITY = "$KEY_BASE_URL/del?tab=Priority&email=";
+  static const IMG_URL = "https://res.cloudinary.com/dsdowcig9";
 
-  // ignore: constant_identifier_names
-  static const KEY_CHART_READ_ALL = "$KEY_BASE_URL/get?tab=Dashboard&email=";
+  static const JWT = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJxbmdvYzA3MDEyMDAyIiwic3ViIjoiOTQwZjJlM2ItNDY1Yi00ZjI1LWIzNTQtZDM2YWUxOGZiZjMyIiwiZXhwIjozNjE3MzM1MTQyMzksImlhdCI6MTczMzUxNDIzOSwianRpIjoiNjY1MjMwMTEtMzE4ZS00ZTUwLWI3NzktMWE1ZGRhMzkyYmU1Iiwic2NvcGUiOiJST0xFX0FETUlOIFJPTEVfUkVTVEFVUkFOVCBST0xFX0NVU1RPTUVSIFJPTEVfRFJJVkVSIn0.fyad8YgYSOMfiqFW7cdfIvjQGt2xuYyB45oM6PK-ze2HXMh_KrWFtjmJ26atRJsgyjuebTcGWJsBWosi-XMfQg";
 
-  // ignore: constant_identifier_names
-  static const PRIMARY_COLOR = Color(0XFF4CAEE3);
 
-  // Đăng nhập đăng ký
-
-  // ignore: constant_identifier_names
-  static const KEY_STATUS_SIGNIN_SUCCESS = 1;
-  // ignore: constant_identifier_names
-  static const KEY_STATUS_SIGNUP_SUCCESS = 1;
-  // ignore: constant_identifier_names
-  static const KEY_STATUS_SIGNIN_NOTFOUND = 1;
-  // ignore: constant_identifier_names
-  static const KEY_STATUS_SIGNIN_HASERROR = -1;
-  // ignore: constant_identifier_names
-  static const KEY_EMAIL_HAS_LENGTH_LESS_6_CHAR  = 1;
-  // ignore: constant_identifier_names
-  static const KEY_EMAIL_HAS_LENGTH_GREATER_256_CHAR  = 2;
-  // ignore: constant_identifier_names
-  static const KEY_EMAIL_MALFORMED  = 3;
-  // ignore: constant_identifier_names
-  static const KEY_VALID_EMAIL  = 0;
-
-  // ignore: constant_identifier_names
-  static const KEY_PASSWORD_LENGTH_INVALID = 1;
-  // ignore: constant_identifier_names
-  static const KEY_PASSWORD_WITHOUT_CAPTCHA = 2;
-  // ignore: constant_identifier_names
-  static const KEY_PASSWORD_WITHOUT_NUMBERS = 3;
-  // ignore: constant_identifier_names
-  static const KEY_PASSWORD_VALID = 0;
-
-  // Check Name
-  // ignore: constant_identifier_names
-  static const KEY_NAME_LENGTH_INVALID = 1;
-  // ignore: constant_identifier_names
-  static const KEY_NAME_WITH_FINAL_SPACE = 2;
-  // ignore: constant_identifier_names
-  static const KEY_NAME_VALID = 0;
-
-  //Language
-  // ignore: constant_identifier_names
-  static const KEY_LANGUAGE = "language";
-  // ignore: constant_identifier_names
-  static const KEY_ENGLISH = "en";
-  // ignore: constant_identifier_names
-  static const KEY_VIETNAMESE = "vi";
-
-  // ignore: constant_identifier_names
-  static const KEY_STATUS_1 = 1;
-  // ignore: constant_identifier_names
-  static const KEY_STATUS__1 = -1;
-  // ignore: constant_identifier_names
-  static const KEY_ERROR_1 = 1;
-  // ignore: constant_identifier_names
-  static const KEY_ERROR_2 = 2;
-
-  //Share Preference
-  // ignore: constant_identifier_names
-  static const KEY_EMAIL = "email";
-
-  // ignore: constant_identifier_names
-  static const KEY_PASSWORD = "password";
-
-  // ignore: constant_identifier_names
-  static const KEY_FIRST_NAME = "firstName";
-
-  // ignore: constant_identifier_names
-  static const KEY_LAST_NAME = "lastName";
-
-  // ignore: constant_identifier_names
-  static const KEY_IS_GMAIL = "isGmail";
-
-  // ignore: constant_identifier_names
-  static const KEY_IS_REMEMBER = "isRemember";
-
-  // ignore: constant_identifier_names
-  static const KEY_PHOTO_URL = "photoUrl";
+//Nếu là Emulator ở máy thì dùng 10.0.2.2 nếu ngoài thì vào ipconfig check ipv4
 }
