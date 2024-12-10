@@ -42,6 +42,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
   void initState() {
     super.initState();
     _initializeLocation();
+
     initialize();
   }
 
@@ -118,15 +119,15 @@ class _DriverHomePageState extends State<DriverHomePage> {
       }
       driverController.updateDriverStatus();
       if (driverController.isOnline.value) {
-        // Bắt đầu cập nhật vị trí mỗi 5 giây
+
         _locationUpdateTimer = Timer.periodic(Duration(seconds: 5), (timer) {
           _getCurrentLocation();
         });
-       // _updateLocationOnMap(); // Vẽ icon vị trí lên map
+
       } else {
-        // Dừng cập nhật và xóa icon vị trí trên map
+
         _locationUpdateTimer?.cancel();
-      //  pointAnnotationManager?.deleteAll();
+
       }
     });
   }
@@ -138,7 +139,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.reorder), label: 'Order'),
-          BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Message'),
+
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,
@@ -151,7 +152,6 @@ class _DriverHomePageState extends State<DriverHomePage> {
         children: [
           _buildHomePage(),
           OrderPage(),
-          MessagePage(),
           ProfilePage(),
         ],
       ),
@@ -197,7 +197,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage('${Constant.BACKEND_URL}${driver.imgUrl}'),
+                    backgroundImage: NetworkImage('${Constant.IMG_URL}${driver.imgUrl}'),
                     radius: 30,
                   ),
                   const SizedBox(width: 16.0),

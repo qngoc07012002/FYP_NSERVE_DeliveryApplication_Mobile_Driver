@@ -17,7 +17,6 @@ class Driver {
     this.balance,
   });
 
-  // Tạo một phương thức từ JSON
   factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
       driverId: json['driverId'],
@@ -29,7 +28,6 @@ class Driver {
     );
   }
 
-  // Chuyển đổi model về dạng JSON
   Map<String, dynamic> toJson() {
     return {
       'driverId': driverId,

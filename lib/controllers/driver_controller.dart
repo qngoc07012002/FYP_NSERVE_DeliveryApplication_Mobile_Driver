@@ -10,6 +10,8 @@ class DriverController extends GetxController {
   Rx<Driver?> driver = Rx<Driver?>(null);
   RxBool isLoading = true.obs;
   RxBool isOnline = false.obs;
+
+
   @override
   void onInit() {
     // TODO: implement onInit
@@ -23,8 +25,8 @@ class DriverController extends GetxController {
   }
 
   Future<void> fetchDriverInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('jwt_token', Constant.JWT);
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.setString('jwt_token', Constant.JWT);
 
     String? jwtToken = await getToken();
     try {
@@ -110,5 +112,34 @@ class DriverController extends GetxController {
     }
   }
 
+  Future<void> deposit(double amount, String paymentIntentId) async {
+    String token = await getToken();
+
+    final url = Uri.parse(Constant.DRIVER_DEPOSIT_URL);
+
+    final headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'amount': amount,
+      'paymentIntentId': paymentIntentId,
+    });
+
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        //Get.snackbar("Notification", "Deposit Successfully");
+        fetchDriverInfo();
+      } else {
+        Get.snackbar("Notification", "Something went wrong, please try again");
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
 }

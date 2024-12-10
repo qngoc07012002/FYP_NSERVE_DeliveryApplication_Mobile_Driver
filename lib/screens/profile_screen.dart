@@ -1,121 +1,145 @@
-
+import 'package:deliveryapplication_mobile_driver/controllers/driver_controller.dart';
 import 'package:deliveryapplication_mobile_driver/screens/payment_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'changepassword_screen.dart';
+import 'package:get/get.dart';
+import '../controllers/user_controller.dart';
+import '../ultilities/Constant.dart';
 import 'editprofile_screen.dart';
 import 'order_screen.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
+  final DriverController driverController = Get.find();
+  final UserController userController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile',  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+        centerTitle: true,
         backgroundColor: const Color(0xFF39c5c8),
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20.0)),
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+        ),
+        toolbarHeight: 80.0,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 20.0),
-            // Profile picture
-            const Center(
-              child: Stack(
+            Center(
+              child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 60.0,
-                    backgroundImage: NetworkImage(
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnihI8ux-tT_Z1JF8toQIn05jA8PO--cdCJELNtoYDXoA2C1FbkjQLE34NTjbsvyo0nXU&usqp=CAU'), // Example image URL
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 60.0,
+                        backgroundImage: NetworkImage(
+                          Constant.IMG_URL + driverController.driver.value!.imgUrl!,
+                        ),
+                      ),
+                    ],
                   ),
-
+                  const SizedBox(height: 10.0),
+                  Text(
+                    'Balance: \$${driverController.driver.value!.balance?.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 20.0),
             // Profile options
-            ListTile(
-              leading: const Icon(Icons.edit, color: Color(0xFF39c5c8)),
-              title: const Text('Edit Profile'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditProfilePage(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  _buildProfileOption(
+                    icon: Icons.edit,
+                    text: 'Edit Profile',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfilePage(),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-            Divider(color: Colors.grey[300]),
-            ListTile(
-              leading: const Icon(Icons.lock, color: Color(0xFF39c5c8)),
-              title: const Text('Change Password'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChangePasswordPage(),
+                  _buildDivider(),
+                  _buildProfileOption(
+                    icon: Icons.history,
+                    text: 'Order History',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderPage(),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-            Divider(color: Colors.grey[300]),
-            ListTile(
-              leading: const Icon(Icons.history, color: Color(0xFF39c5c8)),
-              title: const Text('Order History'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OrderPage(),
+                  _buildDivider(),
+                  _buildProfileOption(
+                    icon: Icons.payment,
+                    text: 'Deposit',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DepositPage(),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-            Divider(color: Colors.grey[300]),
-            ListTile(
-              leading: const Icon(Icons.area_chart, color: Color(0xFF39c5c8)),
-              title: const Text('Statictis'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PaymentPage(),
+                  _buildDivider(),
+                  _buildProfileOption(
+                    icon: Icons.logout,
+                    text: 'Logout',
+                    iconColor: Colors.red,
+                    onTap: () {
+                      userController.logout();
+                    },
                   ),
-                );
-              },
+                  _buildDivider(),
+                ],
+              ),
             ),
-            Divider(color: Colors.grey[300]),
-            ListTile(
-              leading: const Icon(Icons.payment, color: Color(0xFF39c5c8)),
-              title: const Text('Payment'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PaymentPage(),
-                  ),
-                );
-              },
-            ),
-            Divider(color: Colors.grey[300]),
-            ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
-              title: const Text('Logout'),
-              onTap: () {
-                // Handle Logout action
-              },
-            ),
-            Divider(color: Colors.grey[300]),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildProfileOption({
+    required IconData icon,
+    required String text,
+    Color iconColor = const Color(0xFF39c5c8),
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: iconColor),
+      title: Text(
+        text,
+        style: const TextStyle(fontSize: 16.0),
+      ),
+      onTap: onTap,
+    );
+  }
+
+  Divider _buildDivider() {
+    return Divider(color: Colors.grey[300], thickness: 1.0);
   }
 }

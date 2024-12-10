@@ -1,7 +1,14 @@
 import 'dart:async';
-import 'dart:convert';import 'package:flutter/material.dart';
+import 'dart:convert';import 'package:deliveryapplication_mobile_driver/screens/homepage_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../controllers/driver_controller.dart';
+import '../controllers/order_controller.dart';
+import '../ultilities/Constant.dart';
 
 class VerificationPage extends StatefulWidget {
   final String phoneNumber;
@@ -74,7 +81,7 @@ class _VerificationPageState extends State<VerificationPage> {
     });
 
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8080/nserve/auth/verifyOTP'),
+      Uri.parse(Constant.VERIFY_OTP_URL),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -97,13 +104,9 @@ class _VerificationPageState extends State<VerificationPage> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('jwt_token', token);
 
-
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => DriverHomePage(),
-          //   ),
-          // );
+          Get.put(DriverController());
+          Get.put(OrderController());
+          Get.offAll(DriverHomePage());
         } else if (responseData['result']['status'] == 'pending') {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Try again')),

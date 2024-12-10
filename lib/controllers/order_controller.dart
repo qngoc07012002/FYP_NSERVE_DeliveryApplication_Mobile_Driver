@@ -49,7 +49,10 @@ class OrderController extends GetxController {
         if (data['code'] == 1000) {
           var fetchedOrders = (data['result'] as List)
               .map((item) => Order.fromJson(item))
+              .where((order) => order.orderStatus != "CANCELED")
               .toList();
+
+
           orders.value = fetchedOrders;
 
           orders.sort((a, b) => b.createdAt.compareTo(a.createdAt));

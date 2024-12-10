@@ -1,3 +1,4 @@
+import 'package:deliveryapplication_mobile_driver/controllers/driver_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
@@ -29,7 +30,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   String? _instruction;
   double? _latitude;
   double? _longitude;
-
+  DriverController driverController = Get.find();
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   @override
   void dispose() {
     super.dispose();
-    _controller!.dispose();
+
   }
 
   Future<void> _getCurrentLocation() async {
@@ -89,13 +90,22 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: const Color(0xFF39c5c8),
         title: const Text(
           'Invoice',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        backgroundColor: const Color(0xFF39c5c8),
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+        ),
+        toolbarHeight: 80.0,
       ),
       body: Obx(() {
         final currentOrder = orderController.currentOrder.value;
@@ -274,7 +284,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     Icons.navigation,
                     color: Color(0xFF39c5c8),
                   ),
-                  mini: true, // Nút nhỏ
+                  mini: true,
                 ),
               ] else if (orderController.currentOrder.value?.orderStatus == 'PREPARED' || orderController.currentOrder.value?.orderStatus == 'DELIVERING') ...[
                 FloatingActionButton.extended(
@@ -291,10 +301,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       });
 
                     } else if (orderController.currentOrder.value?.orderStatus == 'DELIVERING') {
-                      // TODO: Logic hoàn thành đơn hàng
+                      // TODO: Logic complete Order
                       print('Complete Order');
                       orderController.sendOrderStatusUpdate(orderController.currentOrder.value!.id!, orderController.driverId.value, "DRIVER_DELIVERED_ORDER");
                       orderController.currentOrder.value?.orderStatus = "DELIVERED";
+                      driverController.fetchDriverInfo();
                       setState(() {
 
                       });
@@ -417,7 +428,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return Row(
       children: [
         CircleAvatar(
-          backgroundImage: NetworkImage(Constant.BACKEND_URL + imageUrl),
+          backgroundImage: NetworkImage(Constant.IMG_URL + imageUrl),
           radius: 30.0,
         ),
         const SizedBox(width: 12.0),

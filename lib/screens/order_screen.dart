@@ -11,13 +11,22 @@ class OrderPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Orders', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        centerTitle: true,
         backgroundColor: const Color(0xFF39c5c8),
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20.0)),
+        title: const Text(
+          'Orders',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+        ),
+        toolbarHeight: 80.0,
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -30,7 +39,6 @@ class OrderPage extends StatelessWidget {
           itemCount: controller.orders.length,
           itemBuilder: (context, index) {
             final order = controller.orders[index];
-            if (order.orderStatus != "CANCELED")
               return GestureDetector(
                 onTap: () {
                   controller.currentOrder.value = order;
@@ -40,12 +48,11 @@ class OrderPage extends StatelessWidget {
                   margin: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      // Phần hình ảnh
                       if (order.orderType == 'FOOD' && order.restaurantInfo != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12.0),
                           child: Image.network(
-                            Constant.BACKEND_URL + order.restaurantInfo!.img,
+                            Constant.IMG_URL + order.restaurantInfo!.img,
                             width: 80,
                             height: 80,
                             fit: BoxFit.cover,
@@ -62,7 +69,6 @@ class OrderPage extends StatelessWidget {
                         ),
                       const SizedBox(width: 16.0),
 
-                      // Phần thông tin
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.all(12.0),
